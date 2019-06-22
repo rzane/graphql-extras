@@ -1,3 +1,7 @@
 query Hello {
   hello
 }
+
+query HelloContext {
+  hello: helloContext
+}
