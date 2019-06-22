@@ -1,22 +1,9 @@
 require "rails_helper"
 require "graphql/extras/controller"
+require "support/schema"
 
 RSpec.describe GraphQL::Extras::Controller, type: :controller do
-  class Query < GraphQL::Schema::Object
-    field :hello, String, null: false
-
-    def hello
-      "world"
-    end
-  end
-
-  class Schema < GraphQL::Schema
-    query(Query)
-  end
-
-  let(:json) {
-    JSON.parse(response.body)
-  }
+  let(:json) { JSON.parse(response.body) }
 
   controller ActionController::Base do
     include GraphQL::Extras::Controller

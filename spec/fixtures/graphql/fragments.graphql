@@ -1,0 +1,9 @@
+fragment PersonFields on Person {
+  name
+}
+
+query ListPeople {
+  people {
+    ...PersonFields
+  }
+}
