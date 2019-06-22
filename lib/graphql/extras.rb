@@ -1,6 +1,6 @@
 require "graphql/extras/version"
 
-module Graphql
+module GraphQL
   module Extras
     class Error < StandardError; end
     # Your code goes here...

@@ -4,7 +4,7 @@ require "graphql/extras/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "graphql-extras"
-  spec.version       = Graphql::Extras::VERSION
+  spec.version       = GraphQL::Extras::VERSION
   spec.authors       = ["Ray Zane"]
   spec.email         = ["raymondzane@gmail.com"]
 
