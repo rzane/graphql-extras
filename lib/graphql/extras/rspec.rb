@@ -13,15 +13,47 @@ module GraphQL
 
         def execute(query, variables = {})
           variables = deep_camelize_keys(variables)
+          variables, uploads = extract_uploads(variables)
+          context = @context.merge(uploads: uploads)
 
-          result = @schema.execute(query, variables: variables, context: @context)
+          result = @schema.execute(query, variables: variables, context: context)
           result.to_h
         end
 
         private
 
-        def deep_camelize_keys(data)
-          data.deep_transform_keys { |key| key.to_s.camelize(:lower) }
+        def extract_uploads(variables)
+          uploads = {}
+          variables = deep_transform_values(variables) { |value|
+            if upload?(value)
+              SecureRandom.hex.tap { |key| uploads.merge!(key => value) }
+            else
+              value
+            end
+          }
+
+          [variables, uploads]
+        end
+
+        def deep_camelize_keys(variables)
+          variables.deep_transform_keys { |key| key.to_s.camelize(:lower) }
+        end
+
+        def deep_transform_values(data, &block)
+          case data
+          when Array
+            data.map { |v| deep_transform(v, &block) }
+          when Hash
+            data.transform_values { |v| deep_transform(v, &block) }
+          else
+            yield data
+          end
+        end
+
+        def upload?(value)
+          value.kind_of?(Rack::Test::UploadedFile) ||
+            value.kind_of?(ActionController::TestUploadedFile) ||
+            value.kind_of?(ActionDispatch::Http::UploadedFile)
         end
       end
 
