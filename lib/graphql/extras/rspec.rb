@@ -5,8 +5,6 @@ require "active_support/core_ext/hash"
 module GraphQL
   module Extras
     module RSpec
-      Result = Struct.new(:data, :errors)
-
       class TestSchema
         def initialize(schema, context: {})
           @schema = schema
@@ -14,9 +12,10 @@ module GraphQL
         end
 
         def execute(query, variables = {})
+          variables = deep_camelize_keys(variables)
+
           result = @schema.execute(query, variables: variables, context: @context)
-          result = result.to_h.deep_symbolize_keys
-          Result.new(result[:data], result[:errors])
+          result.to_h
         end
 
         private
@@ -49,10 +48,12 @@ module GraphQL
 end
 
 RSpec::Matchers.define :be_successful_query do
-  match { |result| result.errors.nil? }
+  match do |result|
+    result['errors'].nil?
+  end
 
   failure_message do |result|
-    errors = result.errors.map(&:deep_stringify_keys)
+    errors = result['errors'].map(&:deep_stringify_keys)
     message = "expected query to be successful, but encountered errors:\n"
     message + errors.to_yaml.lines.drop(1).join.indent(2)
   end

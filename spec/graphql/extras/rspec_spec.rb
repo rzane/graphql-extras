@@ -24,14 +24,14 @@ RSpec.describe GraphQL::Extras::RSpec, type: :graphql do
       result = schema.execute(queries.hello)
 
       expect(result).to be_successful_query
-      expect(result[:data][:hello]).to eq("world")
+      expect(result['data']['hello']).to eq("world")
     end
 
     it "allows executing queries with context" do
       result = schema.execute(queries.hello_context)
 
       expect(result).to be_successful_query
-      expect(result[:data][:hello]).to eq("Ray")
+      expect(result['data']['hello']).to eq("Ray")
     end
   end
 end
