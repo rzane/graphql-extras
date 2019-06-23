@@ -1,7 +1,5 @@
 require "graphql/extras/version"
-require "graphql/extras/date"
-require "graphql/extras/date_time"
-require "graphql/extras/decimal"
+require "graphql/extras/types"
 require "graphql/extras/controller"
 
 module GraphQL
