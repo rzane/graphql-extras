@@ -3,7 +3,8 @@ require "graphql/extras/controller"
 require "support/schema"
 
 RSpec.describe GraphQL::Extras::Controller, type: :controller do
-  let(:json) { JSON.parse(response.body) }
+  let(:json)   { JSON.parse(response.body) }
+  let(:upload) { fixture_file_upload(file_fixture("image.jpg")) }
 
   controller ActionController::Base do
     include GraphQL::Extras::Controller
@@ -16,5 +17,23 @@ RSpec.describe GraphQL::Extras::Controller, type: :controller do
   it "executes a query against the schema" do
     post :index, params: { query: "{ hello }" }
     expect(json).to eq("data" => { "hello" => "world" })
+  end
+
+  it "handles file uploads" do
+    query = <<~GRAPHQL
+    mutation UploadImage($image: Upload!) {
+      uploadImage(image: $image)
+    }
+    GRAPHQL
+
+    post :index, params: {
+      query: query,
+      example: upload,
+      variables: {
+        image: "example"
+      }
+    }
+
+    expect(json).to eq("data" => { "uploadImage" => "image.jpg" })
   end
 end

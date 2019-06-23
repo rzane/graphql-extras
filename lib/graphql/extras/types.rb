@@ -35,6 +35,20 @@ module GraphQL
           value.to_s("F")
         end
       end
+
+      class Upload < GraphQL::Schema::Scalar
+        def self.coerce_input(value, context)
+          return nil if value.nil?
+
+          uploads = context.fetch(:uploads) {
+            raise "Expected context to include a hash of uploads."
+          }
+
+          uploads.fetch(value) do
+            raise GraphQL::CoercionError, "No upload named `#{value}` provided."
+          end
+        end
+      end
     end
   end
 end

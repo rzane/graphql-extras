@@ -23,6 +23,6 @@ module Rails
   end
 
   def self.env
-    ActiveSupport::StringInquirer.new('development')
+    ActiveSupport::StringInquirer.new('test')
   end
 end

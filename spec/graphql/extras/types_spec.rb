@@ -1,4 +1,5 @@
 require "graphql/extras/types"
+require "action_dispatch/http/upload"
 
 RSpec.describe GraphQL::Extras::Types do
   describe GraphQL::Extras::Types::Decimal do
@@ -32,6 +33,35 @@ RSpec.describe GraphQL::Extras::Types do
     it "converts a date to a string" do
       value = described_class.coerce_result(Date.new(2019, 1, 1), {})
       expect(value).to eq("2019-01-01")
+    end
+  end
+
+  describe GraphQL::Extras::Types::Upload do
+    let(:upload) {
+      ActionDispatch::Http::UploadedFile.new(
+        filename: "image.jpg",
+        tempfile: "/tmp/image.jpg"
+      )
+    }
+
+    it "extracts an upload from context" do
+      context = { uploads: { "foo" => upload } }
+      value = described_class.coerce_input("foo", context)
+      expect(value).to eq(upload)
+    end
+
+    it "raises an error when uploads are not passed into context" do
+      expect {
+        described_class.coerce_input("foo", {})
+      }.to raise_error(RuntimeError, /hash of uploads/)
+    end
+
+    it "raises an error when upload does not exist in context" do
+      context = { uploads: {} }
+
+      expect {
+        described_class.coerce_input("foo", context)
+      }.to raise_error(GraphQL::CoercionError, "No upload named `foo` provided.")
     end
   end
 end

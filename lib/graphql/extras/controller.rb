@@ -6,11 +6,15 @@ module GraphQL
         operation = params[:operationName]
         variables = cast_graphql_params(params[:variables])
 
+        uploads = params.to_unsafe_h.select do |_, value|
+          value.is_a?(ActionDispatch::Http::UploadedFile)
+        end
+
         result = schema.execute(
           query,
-          context: context,
           operation_name: operation,
-          variables: variables
+          variables: variables,
+          context: context.merge(uploads: uploads)
         )
 
         render(status: 200, json: result)
