@@ -2,11 +2,7 @@ require "graphql/extras/version"
 require "graphql/extras/date"
 require "graphql/extras/date_time"
 require "graphql/extras/decimal"
-
-begin
-  require "graphql/extras/controller"
-rescue LoadError
-end
+require "graphql/extras/controller"
 
 module GraphQL
   module Extras

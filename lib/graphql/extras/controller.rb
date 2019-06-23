@@ -1,7 +1,3 @@
-require "json"
-require "action_dispatch/http/upload"
-require "action_controller/metal/strong_parameters"
-
 module GraphQL
   module Extras
     module Controller
