@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["raymondzane@gmail.com"]
 
   spec.summary       = %q{Utiltities for building GraphQL APIs.}
-  spec.description   = %q{File uploads, authentication, more data types, etc.}
+  spec.description   = %q{A set of modules and types for buildign GraphQL APIs.}
   spec.homepage      = "https://github.com/promptworks/graphql-extras"
 
   spec.metadata["homepage_uri"] = spec.homepage
