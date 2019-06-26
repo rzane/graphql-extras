@@ -5,7 +5,15 @@ require "active_support/core_ext/hash"
 module GraphQL
   module Extras
     module RSpec
-      class TestSchema
+      class Queries
+        def initialize(values)
+          values.each do |key, value|
+            define_singleton_method(key) { value }
+          end
+        end
+      end
+
+      class Schema
         def initialize(schema, context: {})
           @schema = schema
           @context = context
@@ -69,11 +77,11 @@ module GraphQL
           acc.merge(name => [*fragments, query].join)
         }
 
-        Struct.new(*result.keys).new(*result.values)
+        Queries.new(result)
       end
 
       def use_schema(*args)
-        TestSchema.new(*args)
+        Schema.new(*args)
       end
     end
   end
