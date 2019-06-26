@@ -59,9 +59,7 @@ module GraphQL
         end
 
         def upload?(value)
-          value.kind_of?(Rack::Test::UploadedFile) ||
-            value.kind_of?(ActionController::TestUploadedFile) ||
-            value.kind_of?(ActionDispatch::Http::UploadedFile)
+          value.respond_to?(:tempfile) && value.respond_to?(:original_filename)
         end
       end
 
