@@ -1,4 +1,4 @@
-# GraphQL::Extras
+# GraphQL::Extras [![Build Status](https://travis-ci.org/rzane/graphql-extras.svg?branch=master)](https://travis-ci.org/rzane/graphql-extras)
 
 A collection of utilities for building GraphQL APIs.
 
