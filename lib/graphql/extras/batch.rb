@@ -4,8 +4,9 @@ module GraphQL
   module Extras
     module Batch
       class AssociationLoader < GraphQL::Batch::Loader
-        def initialize(name)
+        def initialize(name, preload: name)
           @name = name
+          @preload = preload
         end
 
         def cache_key(record)
@@ -14,7 +15,7 @@ module GraphQL
 
         def perform(records)
           preloader = ActiveRecord::Associations::Preloader.new
-          preloader.preload(records, @name)
+          preloader.preload(records, @preload)
 
           records.each do |record|
             fulfill(record, record.public_send(@name))
