@@ -50,9 +50,9 @@ module GraphQL
         def deep_transform_values(data, &block)
           case data
           when Array
-            data.map { |v| deep_transform(v, &block) }
+            data.map { |v| deep_transform_values(v, &block) }
           when Hash
-            data.transform_values { |v| deep_transform(v, &block) }
+            data.transform_values { |v| deep_transform_values(v, &block) }
           else
             yield data
           end
