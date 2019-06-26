@@ -30,6 +30,34 @@ class GraphqlController < ApplicationController
 end
 ```
 
+### GraphQL::Extras::Batch::AssociationLoader
+
+This is a subclass of [`GraphQL::Batch::Loader`](https://github.com/Shopify/graphql-batch) that performs eager loading of Active Record associations.
+
+```ruby
+loader = GraphQL::Extras::Batch::AssociationLoader.for(:blog)
+loader.load(Post.first)
+loader.load_many(Post.all)
+```
+
+### GraphQL::Extras::Batch::Resolvers
+
+This includes a set of convenience methods for query batching.
+
+```ruby
+class Post < GraphQL::Schema::Object
+  include GraphQL::Extras::Batch::Resolver
+
+  field :blog, BlogType, resolve: association(:blog), null: false
+  field :comments, [CommentType], resolve: association(:comments, preload: { comments: :user }), null: false
+  field :blog_title, String, null: false
+
+  def blog_title
+    association(object, :blog).then(&:title)
+  end
+end
+```
+
 ### GraphQL::Extras::Types
 
 In your base classes, you should include the `GraphQL::Extras::Types`.
