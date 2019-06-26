@@ -1,6 +1,6 @@
-require "rails_helper"
-require "graphql/extras/controller"
+require "support/rails"
 require "support/schema"
+require "graphql/extras/controller"
 
 RSpec.describe GraphQL::Extras::Controller, type: :controller do
   let(:json)   { JSON.parse(response.body) }

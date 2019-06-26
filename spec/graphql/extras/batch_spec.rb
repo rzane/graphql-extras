@@ -1,15 +1,4 @@
-require "sqlite3"
-require "active_support/all"
-require "active_record"
-
-ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
-ActiveRecord::Migration.verbose = false
-ActiveRecord::Schema.define do
-  create_table(:foos, force: true)
-  create_table(:bars, force: true) do |t|
-    t.belongs_to :foo
-  end
-end
+require "support/database"
 
 RSpec.describe GraphQL::Extras::Batch do
   class Foo < ActiveRecord::Base
@@ -44,6 +33,15 @@ RSpec.describe GraphQL::Extras::Batch do
     use GraphQL::Batch
   end
 
+  before :all do
+    Database.setup do
+      create_table(:foos, force: true)
+      create_table(:bars, force: true) do |t|
+        t.belongs_to :foo
+      end
+    end
+  end
+
   before do
     5.times { Bar.create!(foo: Foo.create!) }
   end
@@ -58,7 +56,7 @@ RSpec.describe GraphQL::Extras::Batch do
       }
     GRAPHQL
 
-    count = count_queries(/SELECT.*foos/i) do
+    count = Database.count_queries(/SELECT.*foos/i) do
       BatchSchema.execute(query)
     end
 
@@ -75,19 +73,10 @@ RSpec.describe GraphQL::Extras::Batch do
       }
     GRAPHQL
 
-    count = count_queries(/SELECT.*foos/i) do
+    count = Database.count_queries(/SELECT.*foos/i) do
       BatchSchema.execute(query)
     end
 
     expect(count).to eq(1)
-  end
-
-  def count_queries(matching)
-    count = 0
-    ActiveSupport::Notifications.subscribe('sql.active_record') do |_, _, _, _, values|
-      count += 1 if values[:sql] && values[:sql] =~ matching
-    end
-    yield
-    count
   end
 end

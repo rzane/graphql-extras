@@ -1,4 +1,3 @@
-require "spec_helper"
 require "active_support/all"
 require "action_view"
 require "action_controller"
