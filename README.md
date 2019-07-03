@@ -117,7 +117,7 @@ Here's an example using CURL:
 
 Take note of the correspondence between the value `"image"` and the additional HTTP parameter called `-F image=@cats.png`.
 
-See [apollo-absinthe-upload-link](https://github.com/bytewitchcraft/apollo-absinthe-upload-link) for the client-side implementation.
+See [apollo-link-upload](https://github.com/rzane/apollo-link-upload) for the client-side implementation.
 
 ### RSpec integration
 
