@@ -7,3 +7,12 @@ query ListPeople {
     ...PersonFields
   }
 }
+
+subscription SubscribeListPeople {
+  people {
+    mutation
+    node {
+      ...PersonFields
+    }
+  }
+}

@@ -5,3 +5,12 @@ query Hello {
 query HelloContext {
   hello: helloContext
 }
+
+subscription SubscribeHello {
+  hello {
+    mutation
+    node {
+      hello
+    }
+  }
+}
