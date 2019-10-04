@@ -67,7 +67,7 @@ module GraphQL
         root = ::RSpec.configuration.graphql_fixture_path
         contents = File.read(File.join(root, filename))
 
-        parts = contents.split(/^(?=fragment|query|mutation)/)
+        parts = contents.split(/^(?=fragment|query|mutation|subscription)/)
         queries, fragments = parts.partition { |query| query !~ /^fragment/ }
 
         result = queries.reduce({}) { |acc, query|

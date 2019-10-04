@@ -12,6 +12,21 @@ RSpec.describe GraphQL::Extras::RSpec, type: :graphql do
       queries = graphql_fixture("fragments.graphql")
       expect(queries.list_people).to include("fragment PersonFields")
       expect(queries.list_people).to include("...PersonFields")
+      expect(queries.list_people).to include("query ListPeople {")
+    end
+
+    context "when parsing a subscription" do
+      it "load query from file" do
+        queries = graphql_fixture("hello.graphql")
+        expect(queries.subscribe_hello).to include("subscription SubscribeHello {")
+      end
+
+      it "includes all fragments" do
+        queries = graphql_fixture("fragments.graphql") 
+        expect(queries.subscribe_list_people).to include("fragment PersonFields")
+        expect(queries.subscribe_list_people).to include("...PersonFields")
+        expect(queries.subscribe_list_people).to include("subscription SubscribeListPeople {")
+      end
     end
   end
 
