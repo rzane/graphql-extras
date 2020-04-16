@@ -6,10 +6,8 @@ module GraphQL
   module Extras
     module RSpec
       class Queries
-        def initialize(values)
-          values.each do |key, value|
-            define_singleton_method(key) { value }
-          end
+        def add(key, value)
+          define_singleton_method(key) { value }
         end
       end
 
@@ -63,19 +61,51 @@ module GraphQL
         end
       end
 
+      class Parser
+        include ::GraphQL::Language
+
+        def initialize(document)
+          @operations = document.definitions
+            .grep(Nodes::OperationDefinition)
+
+          @fragments = document.definitions
+            .grep(Nodes::FragmentDefinition)
+            .reduce({}) { |acc, f| acc.merge(f.name => f) }
+        end
+
+        def parse
+          queries = Queries.new
+          printer = Printer.new
+
+          @operations.each do |op|
+            nodes = [op, *find_fragments(op)]
+            nodes = nodes.map { |node| printer.print(node) }
+            queries.add op.name.underscore, nodes.join
+          end
+
+          queries
+        end
+
+        private
+
+        def find_fragments(node)
+          node.selections.flat_map do |field|
+            if field.is_a? Nodes::FragmentSpread
+              fragment = @fragments.fetch(field.name)
+              [fragment, *find_fragments(fragment)]
+            else
+              find_fragments(field)
+            end
+          end
+        end
+      end
+
       def graphql_fixture(filename)
         root = ::RSpec.configuration.graphql_fixture_path
-        contents = File.read(File.join(root, filename))
-
-        parts = contents.split(/^(?=fragment|query|mutation|subscription)/)
-        queries, fragments = parts.partition { |query| query !~ /^fragment/ }
-
-        result = queries.reduce({}) { |acc, query|
-          name = query.split(/\W+/).at(1).underscore.to_sym
-          acc.merge(name => [*fragments, query].join)
-        }
-
-        Queries.new(result)
+        file = File.join(root, filename)
+        document = ::GraphQL.parse_file(file)
+        parser = Parser.new(document)
+        parser.parse
       end
 
       def use_schema(*args)
