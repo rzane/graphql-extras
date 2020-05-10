@@ -40,7 +40,7 @@ jobs:
 
       - name: Check
         id: check
-        uses: rzane/is-unpublished@v1
+        uses: rzane/is-unpublished@v0.3.3
 
       - name: Publish
         if: ${{ steps.check.outputs.is-unpublished == 'true' }}
