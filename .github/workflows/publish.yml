@@ -1,7 +1,9 @@
-name: CI
-on: [push]
+name: Publish
+on:
+  release:
+    types: [published]
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,26 +26,10 @@ jobs:
       - name: Test
         run: bundle exec rspec
 
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Ruby
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.6.x
-          registry-url: https://registry.npmjs.org
-
-      - name: Check
-        id: check
-        uses: rzane/is-unpublished@v0.3.3
+      - name: Set version
+        run: perl -pi -e "s/0\.0\.0/${GITHUB_REF:11}/" lib/graphql/extras/version.rb
 
       - name: Publish
-        if: ${{ steps.check.outputs.is-unpublished == 'true' }}
         run: |
           mkdir -p $HOME/.gem
           touch $HOME/.gem/credentials
@@ -53,12 +39,3 @@ jobs:
           gem push *.gem
         env:
           RUBYGEMS_TOKEN: ${{ secrets.RUBYGEMS_TOKEN }}
-
-      - name: Release
-        if: ${{ steps.check.outputs.is-unpublished == 'true' }}
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.check.outputs.version }}
-          release_name: v${{ steps.check.outputs.version }}
