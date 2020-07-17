@@ -108,8 +108,8 @@ module GraphQL
         parser.parse
       end
 
-      def use_schema(*args)
-        Schema.new(*args)
+      def use_schema(*args, **opts)
+        Schema.new(*args, **opts)
       end
     end
   end
