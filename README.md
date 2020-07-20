@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Build](https://github.com/rzane/graphql-extras/workflows/CI/badge.svg)
+![Build](https://github.com/rzane/graphql-extras/workflows/Build/badge.svg)
 ![Version](https://img.shields.io/gem/v/graphql-extras)
 
 </div>
