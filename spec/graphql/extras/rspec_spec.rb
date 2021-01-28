@@ -22,7 +22,7 @@ RSpec.describe GraphQL::Extras::RSpec, type: :graphql do
       end
 
       it "includes all fragments" do
-        queries = graphql_fixture("fragments.graphql") 
+        queries = graphql_fixture("fragments.graphql")
         expect(queries.subscribe_list_people).to include("fragment PersonFields")
         expect(queries.subscribe_list_people).to include("...PersonFields")
         expect(queries.subscribe_list_people).to include("subscription SubscribeListPeople {")
@@ -34,7 +34,7 @@ RSpec.describe GraphQL::Extras::RSpec, type: :graphql do
     let(:context) { { name: "Ray" } }
     let(:schema)  { use_schema(Schema, context: context) }
     let(:queries) { graphql_fixture("hello.graphql") }
-    let(:upload)  { fixture_file_upload(file_fixture("image.jpg")) }
+    let(:upload)  { build_upload("files/image.jpg") }
 
     it "allows easily executing queries" do
       result = schema.execute(queries.hello)
@@ -60,9 +60,5 @@ RSpec.describe GraphQL::Extras::RSpec, type: :graphql do
 
       schema.execute(queries.hello, data: [{ upload: upload }])
     end
-  end
-
-  def fixture_path
-    File.expand_path("../../fixtures", __FILE__)
   end
 end

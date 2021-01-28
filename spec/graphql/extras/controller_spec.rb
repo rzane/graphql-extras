@@ -4,7 +4,7 @@ require "graphql/extras/controller"
 
 RSpec.describe GraphQL::Extras::Controller, type: :controller do
   let(:json)   { JSON.parse(response.body) }
-  let(:upload) { fixture_file_upload(file_fixture("image.jpg")) }
+  let(:upload) { build_upload("files/image.jpg") }
 
   controller ActionController::Base do
     include GraphQL::Extras::Controller
