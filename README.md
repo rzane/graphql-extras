@@ -37,30 +37,36 @@ class GraphqlController < ApplicationController
 end
 ```
 
-### GraphQL::Extras::Batch::AssociationLoader
+### GraphQL::Extras::AssociationLoader
 
 This is a subclass of [`GraphQL::Batch::Loader`](https://github.com/Shopify/graphql-batch) that performs eager loading of Active Record associations.
 
 ```ruby
-loader = GraphQL::Extras::Batch::AssociationLoader.for(:blog)
+loader = GraphQL::Extras::AssociationLoader.for(:blog)
 loader.load(Post.first)
 loader.load_many(Post.all)
 ```
 
-### GraphQL::Extras::Batch::Resolvers
+### GraphQL::Extras::Preload
 
-This includes a set of convenience methods for query batching.
+This allows you to preload associations before resolving fields.
 
 ```ruby
-class Post < GraphQL::Schema::Object
-  include GraphQL::Extras::Batch::Resolver
+class BaseField < GraphQL::Schema::Field
+  prepend GraphQL::Extras::Preload
+end
 
-  field :blog, BlogType, resolve: association(:blog), null: false
-  field :comments, [CommentType], resolve: association(:comments, preload: { comments: :user }), null: false
-  field :blog_title, String, null: false
+class BaseObject < GraphQL::Schema::Object
+  field_class BaseField
+end
 
-  def blog_title
-    association(object, :blog).then(&:title)
+class PostType < BaseObject
+  field :author, AuthorType, preload: :author, null: false
+  field :author_posts, [PostType], preload: {author: :posts}, null: false
+  field :depends_on_author, Integer, preload: :author, null: false
+
+  def author_posts
+    object.author.posts
   end
 end
 ```
@@ -95,7 +101,7 @@ This scalar takes a `DateTime` and transmits it as a string, using ISO 8601 form
 field :created_at, DateTime, required: true
 ```
 
-*Note: This is just an alias for the `ISO8601DateTime` type that is included in the `graphql` gem.*
+_Note: This is just an alias for the `ISO8601DateTime` type that is included in the `graphql` gem._
 
 #### Decimal
 

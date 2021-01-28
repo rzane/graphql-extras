@@ -1,6 +1,6 @@
 require "support/database"
 
-RSpec.describe GraphQL::Extras::Batch do
+RSpec.describe GraphQL::Extras::Preload do
   class Foo < ActiveRecord::Base
   end
 
@@ -8,20 +8,24 @@ RSpec.describe GraphQL::Extras::Batch do
     belongs_to :foo
   end
 
-  class ResourceType < GraphQL::Schema::Object
+  class BaseField < GraphQL::Schema::Field
+    prepend GraphQL::Extras::Preload
+  end
+
+  class BaseObject < GraphQL::Schema::Object
+    field_class BaseField
     field :id, ID, null: false
   end
 
-  class BarType < ResourceType
-    field :foo, ResourceType, null: false
+  class BarType < BaseObject
+    field :foo, BaseObject, null: false
   end
 
-  class BatchedBarType < ResourceType
-    include GraphQL::Extras::Batch::Resolvers
-    field :foo, ResourceType, null: false, resolve: association(:foo)
+  class BatchedBarType < BaseObject
+    field :foo, BaseObject, null: false, preload: :foo
   end
 
-  class BatchQueryType < GraphQL::Schema::Object
+  class BatchQueryType < BaseObject
     field :bars, [BarType], null: false
     field :bars_batched, [BatchedBarType], null: false
     def bars; Bar.all; end
