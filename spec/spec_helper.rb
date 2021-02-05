@@ -1,4 +1,5 @@
 require "bundler/setup"
+require "rack/test"
 require "graphql/extras"
 
 module UploadHelpers

@@ -10,7 +10,7 @@ RSpec.describe GraphQL::Extras::Controller, type: :controller do
     include GraphQL::Extras::Controller
 
     def index
-      graphql(schema: Schema)
+      graphql(schema: Support::Schema)
     end
   end
 

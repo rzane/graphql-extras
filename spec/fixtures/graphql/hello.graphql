@@ -1,16 +1,11 @@
-query Hello {
-  hello
+query HelloWorld {
+  hello: helloWorld
+}
+
+query HelloName($name: String!) {
+  hello: helloName(name: $name)
 }
 
 query HelloContext {
   hello: helloContext
-}
-
-subscription SubscribeHello {
-  hello {
-    mutation
-    node {
-      hello
-    }
-  }
 }
