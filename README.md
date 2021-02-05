@@ -132,7 +132,9 @@ Take note of the correspondence between the value `"image"` and the additional H
 
 See [apollo-link-upload](https://github.com/rzane/apollo-link-upload) for the client-side implementation.
 
-### Testing
+### GraphQL::Extras::Test
+
+This module makes it really easy to test your schema.
 
 First, create a test schema:
 
