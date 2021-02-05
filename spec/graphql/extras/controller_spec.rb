@@ -15,8 +15,8 @@ RSpec.describe GraphQL::Extras::Controller, type: :controller do
   end
 
   it "executes a query against the schema" do
-    post :index, params: { query: "{ hello }" }
-    expect(json).to eq("data" => { "hello" => "world" })
+    post :index, params: { query: "{ helloWorld }" }
+    expect(json).to eq("data" => { "helloWorld" => "Hello, world" })
   end
 
   it "handles file uploads" do
