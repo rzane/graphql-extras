@@ -9,6 +9,22 @@
 
 A collection of utilities for building GraphQL APIs.
 
+**Table of Contents**
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [GraphQL::Extras::Controller](#graphqlextrascontroller)
+  - [GraphQL::Extras::AssociationLoader](#graphqlextrasassociationloader)
+  - [GraphQL::Extras::Preload](#graphqlextraspreload)
+  - [GraphQL::Extras::Types](#graphqlextrastypes)
+    - [Date](#date)
+    - [DateTime](#datetime)
+    - [Decimal](#decimal)
+    - [Upload](#upload)
+  - [GraphQL::Extras::Test](#graphqlextrastest)
+- [Development](#development)
+- [Contributing](#contributing)
+
 ## Installation
 
 Add this line to your application's Gemfile:
