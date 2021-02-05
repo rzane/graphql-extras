@@ -1,6 +1,6 @@
 require "securerandom"
 require "active_support/inflector"
-require "active_support/core_ext/hash/deep_transform_values"
+require "active_support/core_ext/hash"
 require "graphql/extras/test/loader"
 require "graphql/extras/test/response"
 
@@ -32,6 +32,10 @@ module GraphQL
 
         def __execute(schema, query, variables)
           uploads = {}
+
+          variables = variables.deep_transform_keys do |key|
+            key.to_s.camelize(:lower)
+          end
 
           variables = variables.deep_transform_values do |value|
             if value.respond_to? :tempfile
