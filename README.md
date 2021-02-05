@@ -132,36 +132,42 @@ Take note of the correspondence between the value `"image"` and the additional H
 
 See [apollo-link-upload](https://github.com/rzane/apollo-link-upload) for the client-side implementation.
 
-### RSpec integration
+### Testing
 
-Add the following to your `rails_helper.rb` (or `spec_helper.rb`).
+First, create a test schema:
 
 ```ruby
-require "graphql/extras/rspec"
+# spec/support/test_schema.rb
+require "graphql/extras/test"
+
+class TestSchema < GraphQL::Extras::Test::Schema
+  configure schema: Schema, queries: "spec/**/*.graphql"
+end
 ```
 
 Now, you can run tests like so:
 
 ```ruby
+require "support/test_schema"
+
 RSpec.describe "hello" do
   let(:context) { { name: "Ray" } }
-  let(:schema)  { use_schema(Schema, context: context) }
-  let(:queries) { graphql_fixture("hello.graphql") }
+  let(:schema)  { TestSchema.new(context) }
 
   it "allows easily executing queries" do
-    result = schema.execute(queries.hello)
+    query = schema.hello
 
-    expect(result).to be_successful_query
-    expect(result['data']['hello']).to eq("world")
+    expect(query).to be_successful
+    expect(query.data["hello"]).to eq("world")
   end
-end
-```
 
-The `graphql_fixture` method assumes that your queries live in `spec/fixtures/graphql`. You can change this assumption with the following configuration:
+  it "parses errors" do
+    query = schema.kaboom
 
-```ruby
-RSpec.configure do |config|
-  config.graphql_fixture_path = '/path/to/queries'
+    expect(query).not_to be_successful
+    expect(query.errors[0].message).to eq("Invalid")
+    expect(query.errors[0].code).to eq("VALIDATION_ERROR")
+  end
 end
 ```
 

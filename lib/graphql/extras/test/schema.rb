@@ -24,13 +24,13 @@ module GraphQL
           end
         end
 
-        def initialize(**context)
+        def initialize(context = {})
           @context = context
         end
 
         private
 
-        def __execute(schema, query, variables = {})
+        def __execute(schema, query, variables)
           uploads = {}
 
           variables = variables.deep_transform_values do |value|
