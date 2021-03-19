@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport", ">= 5.2"
   spec.add_dependency "graphql", "~> 1.12"
-  spec.add_dependency "graphql-batch", "~> 0.4"
 
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"

@@ -1,7 +1,17 @@
-require "graphql/extras/association_loader"
-
 module GraphQL
   module Extras
+    class PreloadSource < GraphQL::Dataloader::Source
+      def initialize(preload)
+        @preload = preload
+      end
+
+      def fetch(records)
+        preloader = ActiveRecord::Associations::Preloader.new
+        preloader.preload(records, @preload)
+        records
+      end
+    end
+
     module Preload
       # @override
       def initialize(*args, preload: nil, **opts, &block)
@@ -10,13 +20,13 @@ module GraphQL
       end
 
       # @override
-      def resolve(object, args, ctx)
-        return super unless @preload
-
-        loader = AssociationLoader.for(@preload)
-        loader.load(object.object).then do
-          super(object, args, ctx)
+      def resolve(object, args, context)
+        if @preload
+          loader = context.dataloader.with(PreloadSource, @preload)
+          loader.load(object.object)
         end
+
+        super
       end
     end
   end

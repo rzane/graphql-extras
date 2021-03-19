@@ -14,8 +14,8 @@ A collection of utilities for building GraphQL APIs.
 - [Installation](#installation)
 - [Usage](#usage)
   - [GraphQL::Extras::Controller](#graphqlextrascontroller)
-  - [GraphQL::Extras::AssociationLoader](#graphqlextrasassociationloader)
   - [GraphQL::Extras::Preload](#graphqlextraspreload)
+  - [GraphQL::Extras::PreloadSource](#graphqlextraspreloadsource)
   - [GraphQL::Extras::Types](#graphqlextrastypes)
     - [Date](#date)
     - [DateTime](#datetime)
@@ -53,21 +53,15 @@ class GraphqlController < ApplicationController
 end
 ```
 
-### GraphQL::Extras::AssociationLoader
-
-This is a subclass of [`GraphQL::Batch::Loader`](https://github.com/Shopify/graphql-batch) that performs eager loading of Active Record associations.
-
-```ruby
-loader = GraphQL::Extras::AssociationLoader.for(:blog)
-loader.load(Post.first)
-loader.load_many(Post.all)
-```
-
 ### GraphQL::Extras::Preload
 
 This allows you to preload associations before resolving fields.
 
 ```ruby
+class Schema < GraphQL::Schema
+  use GraphQL::Dataloader
+end
+
 class BaseField < GraphQL::Schema::Field
   prepend GraphQL::Extras::Preload
 end
@@ -85,6 +79,16 @@ class PostType < BaseObject
     object.author.posts
   end
 end
+```
+
+### GraphQL::Extras::PreloadSource
+
+This is a subclass of [`GraphQL::Dataloader::Source`](https://graphql-ruby.org/dataloader/overview.html) that performs eager loading of Active Record associations.
+
+```ruby
+loader = dataloader.with(GraphQL::Extras::PreloadSource, :blog)
+loader.load(Post.first)
+loader.load_many(Post.all)
 ```
 
 ### GraphQL::Extras::Types

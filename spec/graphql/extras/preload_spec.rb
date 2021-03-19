@@ -34,7 +34,7 @@ RSpec.describe GraphQL::Extras::Preload do
 
   class BatchSchema < GraphQL::Schema
     query BatchQueryType
-    use GraphQL::Batch
+    use GraphQL::Dataloader
   end
 
   before :all do
