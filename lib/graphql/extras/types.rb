@@ -34,8 +34,8 @@ module GraphQL
       class Decimal < GraphQL::Schema::Scalar
         description <<~DESC
         The `Decimal` scalar type represents signed double-precision fractional
-        values parsed by the `Decimal` library. The Decimal appears in a JSON
-        response as a string to preserve precision.
+        values. The Decimal appears in a JSON response as a string to preserve
+        precision.
         DESC
 
         def self.coerce_input(value, _context)
