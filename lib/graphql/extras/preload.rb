@@ -6,8 +6,17 @@ module GraphQL
       end
 
       def fetch(records)
-        preloader = ActiveRecord::Associations::Preloader.new
-        preloader.preload(records, @preload)
+        if ActiveRecord::VERSION::MAJOR >= 7
+          preloader = ActiveRecord::Associations::Preloader.new(
+            records: records,
+            associations: @preload
+          )
+          preloader.call
+        else
+          preloader = ActiveRecord::Associations::Preloader.new
+          preloader.preload(records, @preload)
+        end
+
         records
       end
     end
