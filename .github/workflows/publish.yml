@@ -12,7 +12,7 @@ jobs:
       - name: Setup Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: 2.6.x
+          ruby-version: 3.1.x
 
       - name: Install packages
         run: sudo apt-get install libsqlite3-dev
