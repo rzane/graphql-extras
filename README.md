@@ -206,3 +206,8 @@ To run the test suite:
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/rzane/graphql-extras.
+
+
+## License
+
+GraphQL::Extras is released under the [MIT License](MIT-LICENSE).
