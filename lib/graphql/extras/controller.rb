@@ -19,36 +19,42 @@ module GraphQL
 
         render(status: 200, json: result)
       rescue => error
-        raise error unless debug
-
-        logger.error(error.message)
-        logger.error(error.backtrace.join("\n"))
-
-        render(
-          status: 500,
-          json: {
-            data: {},
-            error: {
-              message: error.message,
-              backtrace: error.backtrace
-            }
-          }
-        )
+        handle_error(error)
       end
 
-      private def cast_graphql_params(param)
-        case param
-        when String
-          return {} if param.blank?
-          cast_graphql_params(JSON.parse(param))
-        when Hash, ActionController::Parameters
-          param
-        when nil
-          {}
-        else
-          raise ArgumentError, "Unexpected parameter: #{param}"
+      private
+
+        def cast_graphql_params(param)
+          case param
+          when String
+            return {} if param.blank?
+            cast_graphql_params(JSON.parse(param))
+          when Hash, ActionController::Parameters
+            param
+          when nil
+            {}
+          else
+            raise ArgumentError, "Unexpected parameter: #{param}"
+          end
         end
-      end
+
+        def handle_error(error)
+          raise error unless debug
+
+          logger.error(error.message)
+          logger.error(error.backtrace.join("\n"))
+
+          render(
+            status: 500,
+            json: {
+              data: {},
+              error: {
+                message: error.message,
+                backtrace: error.backtrace
+              }
+            }
+          )
+        end
     end
   end
 end
