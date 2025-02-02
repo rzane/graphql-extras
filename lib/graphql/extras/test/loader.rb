@@ -37,15 +37,17 @@ module GraphQL
         # Recursively iterate through the node's fields and find
         # resolve all of the fragment definitions that are needed.
         def resolve_fragments(node)
-          node.selections.flat_map do |field|
-            case field
+          result = node.selections.flat_map do |selection|
+            case selection
             when Nodes::FragmentSpread
-              fragment = fetch_fragment!(field.name)
+              fragment = fetch_fragment!(selection.name)
               [fragment, *resolve_fragments(fragment)]
             else
-              resolve_fragments(field)
+              resolve_fragments(selection)
             end
           end
+
+          result.uniq
         end
 
         def fetch_fragment!(name)
