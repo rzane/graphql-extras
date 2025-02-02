@@ -2,4 +2,7 @@ query ListPeople {
   people {
     ...Person
   }
+  allPeople: people {
+    ...Person
+  }
 }
