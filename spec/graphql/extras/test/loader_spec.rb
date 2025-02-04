@@ -29,7 +29,7 @@ RSpec.describe GraphQL::Extras::Test::Loader do
     expect { loader.print(operation) }.to raise_error(Loader::FragmentNotFoundError)
   end
 
-  it "prints an operation, including fragments" do
+  it "prints an operation, including fragments, with no duplicates" do
     loader = Loader.new
     loader.load "spec/fixtures/graphql/person.graphql"
     loader.load "spec/fixtures/graphql/people.graphql"
@@ -38,6 +38,6 @@ RSpec.describe GraphQL::Extras::Test::Loader do
     graphql = loader.print(operation)
 
     expect(graphql).to include("query ListPeople")
-    expect(graphql).to include("fragment Person")
+    expect(graphql.scan("fragment Person").count).to eq 1
   end
 end
