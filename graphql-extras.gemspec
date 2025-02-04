@@ -27,11 +27,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 5.2"
   spec.add_dependency "graphql", [">= 1.12", "< 3"]
 
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rspec-rails", "~> 4.0"
-  spec.add_development_dependency "actionpack", ">= 5.2"
-  spec.add_development_dependency "activerecord", ">= 5.2"
-  spec.add_development_dependency "sqlite3", "~> 1.4"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec-rails"
+  spec.add_development_dependency "actionpack"
+  spec.add_development_dependency "activerecord"
+  spec.add_development_dependency "sqlite3"
 end
